@@ -1,6 +1,7 @@
 import { objectType, extendType, stringArg, nonNull, intArg } from 'nexus';
 import { User } from './User';
 
+
 export const Task = objectType({
   name: 'Task',
   definition(t) {
@@ -9,8 +10,8 @@ export const Task = objectType({
     t.string('title')
     t.string('description')
     t.string('status')
-    // t.string('userId')
-    t.list.field('users', {
+    t.string('userId')
+    t.field('user', {
       type: User,
       async resolve(parent, _args, ctx) {
         return await ctx.prisma.task
