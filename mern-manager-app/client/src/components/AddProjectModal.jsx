@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaUser } from 'react-icons/fa';
+import { FaList } from 'react-icons/fa';
 import { useMutation, useQuery } from '@apollo/client';
 import { ADD_PROJECT } from '../mutations/projectMutations';
 import { GET_PROJECTS } from '../queries/projectQueries';
@@ -11,19 +11,19 @@ export default function AddProjectsModal() {
   const [clientId, setClientId] = useState('');
   const [status, setStatus] = useState('new');
 
-  const { loading, error, data } = useQuery(GET_PROJECTS);
-
-
   const [addProject] = useMutation(ADD_PROJECT, {
     variables: { name, description, clientId, status },
     update(cache, { data: { addProject } }) {
       const { projects } = cache.readQuery({ query: GET_PROJECTS });
       cache.writeQuery({
         query: GET_PROJECTS,
-        data: { clients: [...projects, addProject] },
+        data: { projects: [...projects, addProject] },
       });
-    }
-  })
+    },
+  });
+
+  // Get Clients for select
+  const { loading, error, data } = useQuery(GET_CLIENTS);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -31,16 +31,18 @@ export default function AddProjectsModal() {
     if (name === '' || description === '' || status === '') {
       return alert('Please fill in all fields');
     }
-    addProject(name, description, status, clientId);
+
+    addProject(name, description, clientId, status);
 
     setName('');
     setDescription('');
     setStatus('new');
     setClientId('');
+  };
 
-    if (loading) return null;
-    if (error) return "Something went wrong";
-  }
+  if (loading) return null;
+  if (error) return 'Something Went Wrong';
+
   return (
     <>
       {!loading && !error && (
@@ -52,7 +54,7 @@ export default function AddProjectsModal() {
             data-bs-target='#addProjectModal'
           >
             <div className='d-flex align-items-center'>
-              <FaUser className='list' />
+              <FaList className='icon' />
               <div>New Project</div>
             </div>
           </button>
@@ -105,16 +107,21 @@ export default function AddProjectsModal() {
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
                       >
-                        <option value="new">Not Started</option>
-                        <option value="progress">In Progress</option>
-                        <option value="completed">Completed</option>
+                        <option value='new'>Not Started</option>
+                        <option value='progress'>In Progress</option>
+                        <option value='completed'>Completed</option>
                       </select>
                     </div>
 
                     <div className='mb-3'>
                       <label className='form-label'>Client</label>
-                      <select id='client' className='form-select' value={clientId}>
-                        <option value="">Select Client</option>
+                      <select
+                        id='clientId'
+                        className='form-select'
+                        value={clientId}
+                        onChange={(e) => setClientId(e.target.value)}
+                      >
+                        <option value=''>Select Client</option>
                         {data.clients.map((client) => (
                           <option key={client.id} value={client.id}>
                             {client.name}
