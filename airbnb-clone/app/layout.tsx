@@ -19,4 +19,4 @@ export default function RootLayout({
       <body className={font.className}>{children}</body>
     </html>
   )
-}
+};
