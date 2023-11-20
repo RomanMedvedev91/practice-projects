@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { IoMdClose } from 'react-icons/io';
+import { Button } from "../Button";
 
 interface ModalProps {
   isOpen?: boolean;
@@ -11,8 +12,9 @@ interface ModalProps {
   body?: React.ReactElement;
   footer?: React.ReactElement;
   disabled?: boolean;
+  actionLabel: string;
   secondaryAction?: () => void;
-  secondaryLabel?: string;
+  secondaryActionLabel?: string;
 }
 
 export const Modal = ({
@@ -23,8 +25,9 @@ export const Modal = ({
   body,
   footer,
   disabled,
+  actionLabel,
   secondaryAction,
-  secondaryLabel
+  secondaryActionLabel
 }: ModalProps) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -87,6 +90,7 @@ export const Modal = ({
           md:h-auto
         "
       >
+        {/* CONTENT */}
         <div
           className={`
             translate
@@ -107,6 +111,7 @@ export const Modal = ({
               shadow-lg
               relative
               flex
+              flex-col
               w-full
               bg-white
               outline:none
@@ -138,7 +143,7 @@ export const Modal = ({
               >
                 <IoMdClose size={18} />
               </button>
-              <div className="text lg font-semibold">
+              <div className="text-lg font-semibold">
                 {title}
               </div>
             </div>
@@ -149,8 +154,21 @@ export const Modal = ({
             {/* FOOTER */}
             <div className="flex flex-col gap-2 p-6">
               <div className="flex flex-row items-center gap-4 w-full">
-                {/* <Button /> */}
+                {secondaryAction && secondaryActionLabel && (
+                  <Button
+                    onClick={handleSecondaryAction}
+                    label={secondaryActionLabel}
+                    disabled={disabled}
+                    outline
+                  />
+                  )}
+                  <Button
+                    onClick={handleSubmit}
+                    label={actionLabel}
+                    disabled={disabled}
+                  />
               </div>
+              {footer}
             </div>
           </div>
         </div>
