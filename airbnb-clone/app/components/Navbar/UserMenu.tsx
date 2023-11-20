@@ -1,12 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { Avatar } from '../Avatar';
 import { MenuItem } from './MenuItem';
+import { useRegisterModal } from '@/app/hooks/useRegisterModal';
 
 export const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const registerModal = useRegisterModal();
+console.log('before use Effect');
+useEffect(() => {
+    console.log('inside Effect');
+    const handleClickOutside = (event: MouseEvent) => {
+      if(userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    }
+  }, []);
+  
   const toggleIsOpen = () => {
     setIsOpen(v => !v); 
   }
@@ -30,6 +47,7 @@ export const UserMenu = () => {
           Airbnb your home
         </div>
         <div
+          ref={userMenuRef}
           onClick={toggleIsOpen}
           className="
             p-4
@@ -74,7 +92,7 @@ export const UserMenu = () => {
                 label="Login"
               />
               <MenuItem
-                onClick={() => {}}
+                onClick={registerModal.onOpen}
                 label="Sign up"
               />
             </>

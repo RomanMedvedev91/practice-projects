@@ -12,7 +12,7 @@ interface ButtonProps {
 }
 
 export const Button = ({
-  label,
+  label="Button",
   onClick,
   disabled,
   outline,
@@ -32,7 +32,7 @@ export const Button = ({
         transition
         w-full
         ${outline ? 'bg-white border-black text-black' : 'bg-rose-500 border-rose-500 text-white'}
-        ${small ? 'text-sm font-light border-[1px]' : 'text-md font-semibold border-2'}
+        ${small ? 'text-sm py-1 font-light border-[1px]' : 'text-md py-3 font-semibold border-2'}
       `}
     >
       {Icon && (
