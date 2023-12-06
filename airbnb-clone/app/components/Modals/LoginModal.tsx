@@ -14,9 +14,12 @@ import { Heading } from '../Heading';
 import { Input } from '../inputs/Input';
 import toast from 'react-hot-toast';
 import { Button } from '../Button';
+import { RegisterModal } from './RegisterModal';
+import { useRegisterModal } from '@/app/hooks/useRegisterModal';
 
 export const LoginModal = ({}) => {
   const loginModal = useLoginModal();
+  const registerModal = useRegisterModal();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,6 +57,11 @@ export const LoginModal = ({}) => {
       }
     })
   };
+
+  const toggle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
@@ -107,10 +115,10 @@ export const LoginModal = ({}) => {
       >
         <div className="flex text-center flex-row items-center gap-2">
           <div>
-            Already have an account?
+            First time using Airbnb?
           </div>
           <div
-            onClick={loginModal.onClose}
+            onClick={toggle}
             className="
             text-neutral-800
               cursor-pointer
