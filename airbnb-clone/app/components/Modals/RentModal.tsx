@@ -1,6 +1,7 @@
 'use client';
 
 import axios from 'axios';
+import dynamic from 'next/dynamic';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { AiFillGithub } from 'react-icons/ai';
@@ -19,6 +20,7 @@ import { useRegisterModal } from '@/app/hooks/useRegisterModal';
 import { useRentModal } from '@/app/hooks/useRentModal';
 import { categories } from '../Navbar/Categories';
 import { CategoryInput } from '../inputs/CategoryInput';
+import { CountrySelect } from '../inputs/CountrySelect';
 
 enum STEPS {
   CATEGORY = 0,
@@ -64,6 +66,10 @@ export const RentModal = ({}) => {
   const roomCount = watch('roomCount');
   const bathroomCount = watch('bathroomCount');
   const imageSrc = watch('imageSrc');
+
+  const Map = useMemo(() => dynamic(() => import('../Map'), { 
+    ssr: false 
+  }), [location]);
   
   const setCustomValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -121,7 +127,17 @@ export const RentModal = ({}) => {
 
   if (step === STEPS.LOCATION) {
     bodyContent = (
-      <div>LOCATION</div>
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Where is your place located?"
+          subtitle="Help guests find you!"
+        />
+        <CountrySelect
+          value={location}
+          onChange={(v) => setCustomValue('location', v)}
+        />
+        <Map center={location?.latlng} />
+      </div>
     )
   }
   if (step === STEPS.DESCRIPTION) {
@@ -188,7 +204,7 @@ export const RentModal = ({}) => {
       isOpen={rentModal.isOpen}
       title="Airbnb your home!"
       actionLabel={actionLabel}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={onNext}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
       onClose={rentModal.onClose}
