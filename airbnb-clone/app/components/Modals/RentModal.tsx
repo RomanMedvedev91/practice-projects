@@ -21,6 +21,7 @@ import { useRentModal } from '@/app/hooks/useRentModal';
 import { categories } from '../Navbar/Categories';
 import { CategoryInput } from '../inputs/CategoryInput';
 import { CountrySelect } from '../inputs/CountrySelect';
+import { Counter } from '../inputs/Counter';
 
 enum STEPS {
   CATEGORY = 0,
@@ -189,7 +190,30 @@ export const RentModal = ({}) => {
   }
   if (step === STEPS.INFO) {
     bodyContent = (
-      <div>INFO</div>
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Share some basics about your place"
+          subtitle="What amenitis do you have?"
+        />
+        <Counter
+          title="Guests"
+          subtitle="How many guests do you have?"
+          value={guestCount}
+          onChange={(v) => setCustomValue('guestCount', v)}
+        />
+        <Counter
+          title="Rooms"
+          subtitle="How many rooms do you have?"
+          value={roomCount}
+          onChange={(v) => setCustomValue('roomCount', v)}
+        />
+        <Counter
+          title="Bathrooms"
+          subtitle="How many bathrooms do you have?"
+          value={bathroomCount}
+          onChange={(v) => setCustomValue('bathroomCount', v)}
+        />
+      </div>
     )
   }
   if (step === STEPS.PRICE) {
