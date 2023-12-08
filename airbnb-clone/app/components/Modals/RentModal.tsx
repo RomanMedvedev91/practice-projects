@@ -22,6 +22,7 @@ import { categories } from '../Navbar/Categories';
 import { CategoryInput } from '../inputs/CategoryInput';
 import { CountrySelect } from '../inputs/CountrySelect';
 import { Counter } from '../inputs/Counter';
+import { ImageUpload } from '../inputs/ImageUpload';
 
 enum STEPS {
   CATEGORY = 0,
@@ -88,7 +89,28 @@ export const RentModal = ({}) => {
     setStep(v => v + 1);
   }
 
-  const onSubmit = () => {};
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if (step !== STEPS.PRICE) {
+      return onNext();
+    }
+    setIsLoading(true);
+
+    axios.post('/api/listings', data)
+    .then(() => {
+      toast.success('Listing created!');
+      router.refresh();
+      reset();
+      setStep(STEPS.CATEGORY);
+      rentModal.onClose();
+    })
+    .catch(() => {
+      toast.error('Something went wrong');
+    })
+    .finally(() => {
+      setIsLoading(false);
+    })
+
+  };
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.PRICE) {
@@ -172,18 +194,12 @@ export const RentModal = ({}) => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Now, set your price"
-          subtitle="How much do you charge per night?"
+          title="Add a photo of your place"
+          subtitle="Show guests what your place looks like!"
         />
-        <Input
-          id="price"
-          label="Price"
-          formatPrice
-          type="number"
-          disabled={isLoading}
-          register={register}
-          errors={errors}
-          required
+        <ImageUpload
+          onChange={(v) => setCustomValue('imageSrc', v)}
+          value={imageSrc}
         />
       </div>
     )
@@ -218,7 +234,22 @@ export const RentModal = ({}) => {
   }
   if (step === STEPS.PRICE) {
     bodyContent = (
-      <div>PRICE</div>
+      <div className="flex flex-col gap-8">
+      <Heading
+        title="Now, set your price"
+        subtitle="How much do you charge per night?"
+      />
+      <Input
+        id="price"
+        label="Price"
+        formatPrice
+        type="number"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+    </div>
     )
   }
  
@@ -228,7 +259,7 @@ export const RentModal = ({}) => {
       isOpen={rentModal.isOpen}
       title="Airbnb your home!"
       actionLabel={actionLabel}
-      onSubmit={onNext}
+      onSubmit={handleSubmit(onSubmit)}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
       onClose={rentModal.onClose}

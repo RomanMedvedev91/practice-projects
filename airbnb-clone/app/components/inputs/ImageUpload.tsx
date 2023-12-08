@@ -17,7 +17,7 @@ interface ImageUploadProps {
 }
 
 
-export const ImageCloud = ({ onChange, value }: ImageUploadProps) => {
+export const ImageUpload = ({ onChange, value }: ImageUploadProps) => {
 
   const handleUpload = useCallback((result: any) => {
     onChange(result.info.secure_url);
