@@ -105,7 +105,7 @@ export const Categories = () => {
   const pathname = usePathname();
   const isMainPage = pathname === '/';
 
-  if (isMainPage) {
+  if (!isMainPage) {
     return null;
   }
 
