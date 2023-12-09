@@ -2,7 +2,7 @@ import countries from "world-countries";
 
 export const formattedCountries = countries.map((country) => ({
   value: country.cca2,
-  laabel: country.name.common,
+  label: country.name.common,
   flag: country.flag,
   latlng: country.latlng,
   region: country.region
