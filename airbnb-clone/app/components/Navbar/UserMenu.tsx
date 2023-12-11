@@ -118,7 +118,7 @@ useEffect(() => {
                   label="My favourites"
                 />
                 <MenuItem
-                  onClick={() => {}}
+                  onClick={() => router.push('/reservations')}
                   label="My reservations"
                 />
                 <MenuItem
